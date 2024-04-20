@@ -1,0 +1,79 @@
+framework:
+    workflows:
+        demande_status:
+            type: state_machine
+            audit_trail:
+                enabled: true
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Entity\Demande
+            #initial_marking: 'En attente'
+            places:
+                - 'EnAttente'
+                - 'SalleAssignee'
+                - 'Terminee'
+                - 'Expiree'
+                - 'Refusee'
+                - 'AnnuleeParEtudiant'
+                - 'Modifier'
+                - 'SupprimerDuDash'
+            transitions:
+                to_canceled:
+                    from: ['Modifier','SalleAssignee','EnAttente']
+                    to:   'AnnuleeParEtudiant'
+                to_updated:
+                    from: ['EnAttente','Modifier']
+                    to:   'Modifier'
+                to_delete:
+                    from: ['Expiree','Refusee','AnnuleeParEtudiant','Terminee','Modifier']
+                    to:   'SupprimerDuDash'
+
+
+
+
+#        commande_status:
+#            type: state_machine
+#            audit_trail:
+#                enabled: true
+#            marking_store:
+#                type: 'method'
+#                property: 'status'
+#            supports:
+#                - App\Entity\Commande
+#            initial_marking: 'EnCoursDePréparation'
+#            places:
+#                - 'EnCoursDePréparation'
+#                - 'Prête'
+#                - 'PriseEnChargeParLeTransporteur'
+#                - 'EnCoursDeLivraison'
+#                - 'Livrée'
+#                - 'AdresseIntrouvable'
+#                - 'ColisNonConforme'
+#                - 'Annulée'
+#            transitions:
+#                to_ready:
+#                    from: 'EnCoursDePréparation'
+#                    to: 'Prête'
+#                to_non_conforming_package:
+#                    from: 'Prête'
+#                    to: 'ColisNonConforme'
+#                to_canceled:
+#                    from: ['EnCoursDePréparation','Prête' ]
+#                    to: 'Annulée'
+#                to_carrier_pick_up:
+#                    from: 'Prête'
+#                    to: 'PriseEnChargeParLeTransporteur'
+#                to_delivered:
+#                    from: 'PriseEnChargeParLeTransporteur'
+#                    to: 'EnCoursDeLivraison'
+#                to_address_not_found:
+#                    from: 'EnCoursDeLivraison'
+#                    to: 'AdresseIntrouvable'
+#                to_delivered_to:
+#                    from: 'EnCoursDeLivraison'
+#                    to: 'Livrée'
+#                to_in_preparation:
+#                    from: 'ColisNonConforme'
+#                    to: 'EnCoursDePréparation'

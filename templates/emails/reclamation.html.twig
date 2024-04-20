@@ -1,0 +1,16 @@
+{# templates/emails/signup.html.twig #}
+<h1> <b>{{ username }},</b> Merci pour votre aide !</h1>
+<p><code>{{ email.to[0].address }}</code></p>
+<p>Voici le compte-rendu du soutien que vous avez réclamé :</p>
+
+<p>Matière : {{ demande.idMatiere }}</p>
+
+<p>
+    Sous-matière : {{ demande.sousMatiere }}
+</p>
+<p>
+    Assisté : {{ demande.idUser }}
+</p>
+
+<p>Vous aurez bientôt une affectation de salle par l'administrateur.</p>
+<p>Un mail de confirmation vous seras envoyé lorsque ce sera le cas</p>

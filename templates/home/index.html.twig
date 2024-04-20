@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+
+    {% if not user %}
+    {% if error ==400 %}
+    <h1>Nous rencontrons un problème de service, merci de retenter dans quelques minutes</h1>
+
+    {% elseif error ==401   %}
+    <h1>Identifiant ou mot de passe incorrect</h1>
+     {% elseif error ==402   %}
+    <h1>Problème de format, merci de contacter l'administrateur
+    </h1>
+       {% else %}
+    <h1>Résultat API ECOLE DIRECTE</h1>
+    {% endif %}
+
+        {% else %}
+            <div class="container container-fluid">
+    <h1>Bienvenue dans votre espace Help Ort, {{ user }}
+    </h1>
+
+            {{ form_start(form) }}
+
+            {{ form_row(form.id_matiere) }}
+            {{ form_row(form.sous_matiere) }}
+            {{ form_row(form.date_fin_demande) }}
+            {{ form_row(form.send) }}
+{#            <button type="submit"> submit</button>#}
+
+        {{ form_end(form) }}
+
+
+    {% endif %}
+</div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const matiereSelectEl = document.getElementById('demande_form_id_matiere');
+    if (matiereSelectEl) {
+    matiereSelectEl.addEventListener('change', function (e) {
+    const formEl = matiereSelectEl.closest('form');
+
+
+    if (formEl) {
+    const formData = new FormData(formEl);
+
+    fetch(formEl.action, {
+    method: formEl.method,
+    body: formData
+    })
+    .then(response => response.text())
+    .then(html => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const newSmFormFieldEl = doc.getElementById('demande_form_sous_matiere');
+    if (newSmFormFieldEl) {
+    newSmFormFieldEl.addEventListener('change', function (e) {
+
+    e.target.classList.remove('is-invalid');
+    });
+
+    const existingSmFormFieldEl = document.getElementById('demande_form_sous_matiere');
+
+    if (existingSmFormFieldEl) {
+    existingSmFormFieldEl.replaceWith(newSmFormFieldEl);
+    } else {
+    console.error("Element with ID 'demande_form_sous_matiere' not found.");
+    }
+    } else {
+    console.error("New element with ID 'demande_form_sous_matiere' not found in the response.");
+    }
+    })
+    .catch(function (err) {
+    console.error('Fetch error:', err);
+    });
+    } else {
+    console.error("Form element not found.");
+    }
+    });
+    }
+    });
+    </script>
+
+
+
+
+{% endblock %}

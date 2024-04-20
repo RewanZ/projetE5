@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Password Reset Email Sent{% endblock %}
+
+{% block body %}
+
+    <p>
+        Si votre compte existe, un email de modification de mot de passe vous y seras envoyé.
+
+        Ce lien expire dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+    </p>
+    <p>Vous n'avez pas reçu de mail de confirmation ? <a href="{{ path('app_forgot_password_request') }}">Je n'ai pas reçu de mail de confirmation  </a>.</p>
+{% endblock %}

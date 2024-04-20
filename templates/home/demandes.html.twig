@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+
+
+    {% if not user %}
+    {% if error ==400 %}
+    <h1>Nous rencontrons un problème de service, merci de retenter dans quelques minutes</h1>
+
+    {% elseif error ==401   %}
+    <h1>Identifiant ou mot de passe incorrect</h1>
+     {% elseif error ==402   %}
+    <h1>Problème de format, merci de contacter l'administrateur
+    </h1>
+       {% else %}
+
+    {% endif %}
+
+
+        {% else %}
+    <h1>Les demandes des utilisateurs qui correspondent à vos compétences {{ user }}</h1>
+
+            <div class="container mt-4">
+                <table class="table">
+                    <thead>
+                    <tr>
+
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for demande in demandes %}
+                        <tr>
+                            <td>{{ demande.idUser }}</td>
+                            <td>{{ demande.sousMatiere }}</td>
+                            <td>{{ demande.idMatiere }}</td>
+
+                            <td>{{ demande.dateUpdated ? demande.dateUpdated|date('Y-m-d') : '' }}</td>
+                            <td>{{ demande.dateFinDemande ? demande.dateFinDemande|date('Y-m-d') : '' }}</td>
+                            <td>{{ statutTab[demande.status]}}</td>
+                            <td>
+                                <a href="{{ path('app_update_demande_show', {'id': demande.id}) }}">Voir</a>
+                                <a href="{{ path('app_update_demande_edit', {'id': demande.id}) }}">Modifier</a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5">no records found</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <a href="{{ path('app_update_demande_new') }}">Create new</a>
+            </div>
+    {% endif %}
+</div>
+{% endblock %}

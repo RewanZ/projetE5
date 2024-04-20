@@ -1,0 +1,13 @@
+{# templates/emails/signup.html.twig #}
+<h1><b>{{ username }}</b> Voici le récapitulatif de votre demande</h1>
+<p><code>{{ email.to[0].address }}</code></p>
+<p>Matière : {{ demande.idMatiere }}</p>
+
+<p>
+    Sous-matière : {{ demande.sousMatiere }}
+</p>
+<p>Date de fin de demande : {{ demande.dateFinDemande |date('d-m-Y') }}</p>
+
+<p>Date de demande : {{ demande.dateUpdated |date('d-m-Y') }}</p>
+<p>Vous aurez bientôt une affectation de salle par l'administrateur.</p>
+<p>Un mail de confirmation vous seras envoyé lorsque ce sera le cas</p>

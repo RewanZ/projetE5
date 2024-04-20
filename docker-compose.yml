@@ -1,0 +1,42 @@
+version: "3"
+services:
+  database:
+    container_name: ${APP_NAME}-database
+    image: mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_DATABASE: helport
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      #MYSQL_ROOT_PASSWORD: 'yes'
+    volumes:
+      - ./var/dbdata:/var/lib/mysql
+  phpmyadmin:
+    container_name: ${APP_NAME}-pma
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8082:80"
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+      UPLOAD_LIMIT: 1G
+      MEMORY_LIMIT: 512M
+      MAX_EXECUTION_TIME: 0
+    restart: always
+    links:
+      - database
+  mailer:
+    container_name: ${APP_NAME}-mailer
+    image: schickling/mailcatcher
+    ports: [ "1025", "1080" ]
+  api-ecoledirect:
+    container_name: HelpOrt_api_ed_2024
+    image: bfoujols/mock-api-ecole-directe:latest
+    ports:
+      - "9042:80"
+    volumes:
+      - ./var/dbdataset:/var/www/mock-ecole-directe-api/var
+volumes:
+  dbdata:

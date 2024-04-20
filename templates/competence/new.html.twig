@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Competence{% endblock %}
+
+{% block body %}
+<div class="container container-fluid">  <h1>S'attribuer une compétence</h1>
+
+    {#{{ include('competence/_form.html.twig') }}#}
+
+    {{ form_start(form) }}
+    {{ form_row(form.matiere) }}
+    {{ form_row(form.sous_matiere) }}
+    {{ form_row(form.send) }}
+
+
+    {{ form_end(form) }}
+
+
+    <a href="{{ path('app_competence_index') }}">back to list</a>
+</div>
+{% endblock %}
+{% block javascripts %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const matiereSelectEl = document.getElementById('competence_matiere');
+            if (matiereSelectEl) {
+                matiereSelectEl.addEventListener('change', function (e) {
+                    const formEl = matiereSelectEl.value;
+
+                        const formData = new FormData(formEl);
+                        fetch(formEl.action, {
+                            url: "competence/{id}/edit",
+                            method: formEl.method,
+                            body: formData
+                        })
+                            .then(response => {
+                                return response.text();
+                            })
+                            .then(html => {
+
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                const newSmFormFieldEl = doc.getElementById('competence_matiere');
+                                if (newSmFormFieldEl) {
+                                    newSmFormFieldEl.addEventListener('change', function (e) {
+
+                                        e.target.classList.remove('is-invalid');
+                                    });
+
+                                    const existingSmFormFieldEl = document.getElementById('competence_sous_matiere');
+                                    console.log(existingSmFormFieldEl);
+                                    if (existingSmFormFieldEl) {
+                                            existingSmFormFieldEl.replaceWith(newSmFormFieldEl);
+                                    }
+                                    else
+                                    {
+                                        console.error("Element with ID 'competence_sous_matiere' not found.");
+                                    }
+                                } else {
+                                    console.error("New element with ID 'competence_sous_matiere' not found in the response.");
+                                }
+                            })
+                            .catch(function (err) {
+                                console.error('Fetch error:', err);
+                            });
+
+                });
+            }
+        });
+    </script>
+
+
+
+
+{% endblock %}

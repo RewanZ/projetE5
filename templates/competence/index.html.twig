@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Competence index{% endblock %}
+
+{% block body %}
+    <h1>Mes Compétences</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th>Matiere</th>
+
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for competence in competences %}
+            <tr>
+
+                <td>{{ competence.matiere }}</td>
+                <td>{{ competence.sousMatiere }}</td>
+
+                {#                {% for sousMatiere in competence.matiere %}#}
+{#                <td>{{ sousMatiere }}</td>#}
+{#                {% endfor %}#}
+                <td>
+                    <a href="{{ path('app_competence_show', {'id': competence.id}) }}">Voir</a>
+                    <a href="{{ path('app_competence_edit', {'id': competence.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucun enregistrement trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_competence_new') }}">Créer une nouvelle compétence</a>
+{% endblock %}
+
+
+

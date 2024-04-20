@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Demande{% endblock %}
+
+{% block body %}
+    <h1>Edit Demande</h1>
+
+    {{ include('update_demande/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_update_demande_index') }}">back to list</a>
+
+    {{ include('update_demande/_delete_form.html.twig') }}
+{% endblock %}
+{% block javascripts %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const matiereSelectEl = document.getElementById('demande_form_id_matiere');
+            if (matiereSelectEl) {
+                matiereSelectEl.addEventListener('change', function (e) {
+                    const formEl = matiereSelectEl.closest('form');
+
+
+                    if (formEl) {
+                        const formData = new FormData(formEl);
+
+                        fetch(formEl.action, {
+                            method: formEl.method,
+                            body: formData
+                        })
+                            .then(response => response.text())
+                            .then(html => {
+                                const parser = new DOMParser();
+                                const doc = parser.parseFromString(html, 'text/html');
+                                const newSmFormFieldEl = doc.getElementById('demande_form_sous_matiere');
+                                console.log(newSmFormFieldEl)
+                                if (newSmFormFieldEl) {
+                                    newSmFormFieldEl.addEventListener('change', function (e) {
+
+                                        e.target.classList.remove('is-invalid');
+                                    });
+
+                                    const existingSmFormFieldEl = document.getElementById('demande_form_sous_matiere');
+
+                                    if (existingSmFormFieldEl) {
+                                        existingSmFormFieldEl.replaceWith(newSmFormFieldEl);
+                                    } else {
+                                        console.error("Element with ID 'demande_form_sous_matiere' not found.");
+                                    }
+                                } else {
+                                    console.error("New element with ID 'demande_form_sous_matiere' not found in the response.");
+                                }
+                            })
+                            .catch(function (err) {
+                                console.error('Fetch error:', err);
+                            });
+                    } else {
+                        console.error("Form element not found.");
+                    }
+                });
+            }
+        });
+    </script>
+
+
+
+
+{% endblock %}

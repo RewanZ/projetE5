@@ -1,0 +1,7 @@
+{{ form_start(form) }}
+{{ form_row(form.matiere) }}
+    {{ form_row(form.sous_matiere) }}
+    {{ form_row(form.send) }}
+
+ <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}
